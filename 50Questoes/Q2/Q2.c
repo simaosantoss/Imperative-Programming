@@ -51,32 +51,34 @@ void imprimeL (LInt l) {
 // 4 - inverter uma lista (sem criar uma nova lista)
 
 LInt reverseL (LInt l) {
-    int len = length(l);
-    LInt array[len];
-    
-    for(int i = 0; i < len; l = l->prox) array[i++] = l;
+    LInt anterior = NULL;
+    LInt atual = l;
+    LInt seguinte;
 
-    for(int i = len - 1; i > 0; i--) array[i]->prox = array[i-1];
+    while (atual != NULL) {
+        seguinte = atual->prox;
+        atual->prox = anterior;
+        anterior = atual;
+        atual = seguinte;
+    }
 
-    array[0]->prox = NULL;
-
-    return array[len - 1];
+    return anterior;
 }
+
 
 // 5 - inserir ordenadamente um elemento numa lista ordenada
 
-void insertOrd (LInt *l, int x)  {
-    LInt *p = l;
-
-    while (*p != NULL && (*p)->valor < x) {
-        p = &(*p)->prox;
-    }
-
+void insertOrd(LInt *l, int x) {
     LInt novo = malloc(sizeof(struct lligada));
     novo->valor = x;
-    novo->prox = *p;
-    *p = novo;
+    novo->prox = NULL;
 
+    while (*l != NULL && (*l)->valor < x) {
+        l = &((*l)->prox);
+    }
+
+    novo->prox = *l;
+    *l = novo;
 }
 
 // 6 - remover um elemento de uma lista ordenada. Retorna 1 caso o elemento a remover não exista, 0 no outro caso

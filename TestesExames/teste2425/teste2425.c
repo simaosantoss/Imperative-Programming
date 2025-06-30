@@ -64,22 +64,29 @@ mais simples, rápido e menos probabilidade de errar
 
 // Exercicio 2
 
+int max(int a, int b) {  
+    return (a > b) ? a : b;  
+}
+int min(int a, int b) {  
+    return (a < b) ? a : b;  
+}
+
 int cardinalidade(Intervalo c[], int N) {
-    int cont = 0;
-    
-    // Conta todos os intervalos
+    int cont = 0; 
+
     for (int i = 0; i < N; i++) {
         cont += c[i].sup - c[i].inf + 1;
     }
-    
-    // Subtrai sobreposições
-    for (int i = 0; i < N-1; i++) {
-        if (c[i].sup >= c[i+1].inf) {
-            // Subtrai a sobreposição
-            cont -= (min(c[i].sup, c[i+1].sup) - max(c[i].inf, c[i+1].inf)) + 1;
+
+    for (int j = 0; j < N - 1; j++) {
+        int inicio_sobreposicao = max(c[j].inf, c[j+1].inf);
+        int fim_sobreposicao = min(c[j].sup, c[j+1].sup);
+       
+        if (inicio_sobreposicao <= fim_sobreposicao) {
+           cont -= fim_sobreposicao - inicio_sobreposicao + 1;
         }
     }
-    
+
     return cont;
 }
 
@@ -87,33 +94,38 @@ int cardinalidade(Intervalo c[], int N) {
 
 void camel2snake(char *id) {
     int len = strlen(id);
-    int j = 0, num_maiusculas = 0;
+    int numMiausculuas = 0;
 
-    for (int i = 0; i < len; i++)
-        if (isupper (id[i])) num_maiusculas += 1;
-
-    char snake[len + num_maiusculas];
-    
     for (int i = 0; i < len; i++) {
-        if (islower (id[i])) {
-            snake[j] = id[i];
+        if (id[i] >= 'A' && id[i] <= 'Z') {
+            numMiausculuas++;
+        }
+    }
+
+    char new[len + numMiausculuas];
+    int j = 0;
+
+    for (int i = 0; i < len; i++) {
+
+        if (id[i] >= 'a' && id[i] <= 'z') {
+            new[j] = id[i];
             j++;
         }
 
-        else if (isupper (id[i])) {
-            snake[j] = '_';
-            snake[j + 1] = tolower (id[i]);
+        else if (id[i] >= 'A' && id[i] <= 'Z') {
+            new[j] = '_';
+            new[j+1] = id[i] + 32;
             j += 2;
         }
 
         else {
-            snake[j] = id[i];  // copia outros caracteres que não são letras
+            new[j] = id[i];
             j++;
         }
     }
 
-    snake[j] = '\0';
-    strcpy (id, snake);
+    new[j] = '\0';
+    strcpy(id, new);
 }
 
 // Exercicio 4
@@ -189,7 +201,6 @@ typedef struct nodo {
 } *ABin;
 
 int nivel (ABin a, int x) {
-
     if (a->valor == x) 
         return 0;
 
@@ -212,7 +223,6 @@ int ancestralComum (ABin a, int x, int y) {
 }
 
 int parentesco(ABin a, int x, int y) {
-    
     if (a == NULL)
         return -1;
 
